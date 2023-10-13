@@ -3,4 +3,3 @@ trigger JobApplicationTrigger on Job_Application__c (after update) {
         JobApplicationStatusTriggerHandler.handleAfterUpdate(Trigger.new, Trigger.oldMap);
     }
 }
-

@@ -2,12 +2,14 @@ public with sharing class JobApplicationStatusTriggerHandler {
     
     public static void handleAfterUpdate(List<Job_Application__c> newList, Map<Id, Job_Application__c> oldMap) {
         List<Task> tasksToInsert = new List<Task>();
+        Id currentUserId = UserInfo.getUserId();
 
         for (Job_Application__c app : newList) {
             Job_Application__c oldApp = oldMap.get(app.Id);
 
             if (oldApp.Status__c != app.Status__c) { 
-                tasksToInsert.addAll(getTasksForStatus(app.Status__c, app.Id));
+                tasksToInsert.addAll(getTasksForStatus(app.Status__c, app.Id, currentUserId));
+
             }
         }
 
@@ -15,13 +17,12 @@ public with sharing class JobApplicationStatusTriggerHandler {
             try {
                 insert tasksToInsert;
             } catch (DmlException e) {
-                // Capture the error for logging or to notify admin.
-                System.debug('Failed to insert tasks due to: ' + e.getMessage());
+                 System.debug('Failed to insert tasks due to: ' + e.getMessage());
             }
         }
     }
 
-    private static List<Task> getTasksForStatus(String status, Id applicationId) {
+    private static List<Task> getTasksForStatus(String status, Id applicationId, Id currentUserId) {
         List<Task> tasks = new List<Task>();
 
         if (status == 'Saved') {
@@ -31,6 +32,7 @@ public with sharing class JobApplicationStatusTriggerHandler {
                               '3. Research the company or role and mark your excitement level.',
                 Subject = 'Job Application was set to "Saved". Please see the Comments',
                 WhatId = applicationId,
+                OwnerId = currentUserId,
                 ActivityDate = Date.today().addDays(2),
                 Priority = 'Medium'
             ));
@@ -44,6 +46,7 @@ public with sharing class JobApplicationStatusTriggerHandler {
                          '5. Submit your application on the company website if possible',
              Subject = 'Job Application was set to "Applying". Please see the Comments',
              WhatId = applicationId,
+             OwnerId = currentUserId,
              ActivityDate = Date.today().addDays(7),
              Priority = 'Medium'
            ));
@@ -56,6 +59,7 @@ public with sharing class JobApplicationStatusTriggerHandler {
                              '4. Set up weekly networking calls to explore similar companies/roles',
                  Subject = 'Job Application was set to "Applied". Please see the Comments',
                  WhatId = applicationId,
+                 OwnerId = currentUserId,
                  ActivityDate = Date.today().addDays(7),
                  Priority = 'Medium'
                ));
@@ -69,6 +73,7 @@ public with sharing class JobApplicationStatusTriggerHandler {
                                   '5. Send thank you emails within 24 hours',
                      Subject = 'Job Application was set to "Interviewing". Please see the Comments',
                      WhatId = applicationId,
+                     OwnerId = currentUserId,
                      ActivityDate = Date.today().addDays(5),
                      Priority = 'Medium'
                    ));
@@ -79,6 +84,7 @@ public with sharing class JobApplicationStatusTriggerHandler {
                                  '3. Evaluate your offer and decline or accept',
                      Subject = 'Job Application was set to "Negotiating". Please see the Comments',
                      WhatId = applicationId,
+                     OwnerId = currentUserId,
                      ActivityDate = Date.today().addDays(3),
                      Priority = 'Medium'
                    ));
@@ -89,6 +95,7 @@ public with sharing class JobApplicationStatusTriggerHandler {
                                  '3. Prepare for your first day of onboarding',
                      Subject = 'Job Application was set to "Accepted". Please see the Comments',
                      WhatId = applicationId,
+                     OwnerId = currentUserId,
                      ActivityDate = Date.today().addDays(7),
                      Priority = 'Medium'
                    ));
@@ -98,6 +105,7 @@ public with sharing class JobApplicationStatusTriggerHandler {
                                  '2. Review your notes and reflect on areas of improvement',
                      Subject = 'Job Application was set to "Closed". Please see the Comments',
                      WhatId = applicationId,
+                     OwnerId = currentUserId,
                      ActivityDate = Date.today().addDays(2),
                      Priority = 'Medium'
                    ));
@@ -106,7 +114,3 @@ public with sharing class JobApplicationStatusTriggerHandler {
         return tasks;
     }
 }
-
-
-
-    
