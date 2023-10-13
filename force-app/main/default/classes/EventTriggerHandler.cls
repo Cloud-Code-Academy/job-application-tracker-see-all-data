@@ -21,12 +21,12 @@ public with sharing class EventTriggerHandler extends TriggerHandler{
         for(Event event : events){
             for(Event existingEvent : existingEvents){
                 if(event.StartDateTime == existingEvent.StartDateTime){
-                   event.addError('Interviews cannot be double booked');
+                   event.addError('You cannot schedule two Interviews at the same time.');
                 }
             }
         }
 
-        
+
     }
-    
+
 }

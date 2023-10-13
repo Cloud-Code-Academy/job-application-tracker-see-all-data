@@ -1,4 +1,4 @@
-@IsTest public with sharing class EventTriggerTest {
+@isTest public with sharing class EventTriggerTest {
     @isTest static void testEventTrigger(){
        List<Event> eventsToInsert = new List<Event>();
         for(Integer i = 0; i < 200; i++){
@@ -24,11 +24,12 @@
         update eventsToInsert;
         System.assert(false,'Expected an exception but did not get one.');
         } catch (DmlException e) {
-            System.assert(e.getMessage().contains('You cannot schedule two meetings at the same time.')); 
+            System.assert(e.getMessage().contains('Interviews cannot be scheduled on weekends')); 
         }
         update eveNotTriggerValidation;
         List<Event> eveNotTriggerValidationUpdated = [SELECT Id, Subject, StartDateTime, DurationInMinutes FROM Event WHERE Id IN :eveNotTriggerValidation];
         for(Event eve : eveNotTriggerValidationUpdated){
+            
             System.assertEquals(200, eveNotTriggerValidationUpdated.size(),'The number of events is not 200');
         }
         test.stopTest(); 
