@@ -5,4 +5,7 @@
 // You can also execute the entire file by running the command:
 //     SFDX: Execute Anonymous Apex with Editor Contents
 
-JoobleCallout.getJoobleDetails('Salesforce', 'Miami', '2023-10-12', 1);
+JoobleCallout.getJoobleDetails('Salesforce', 'Miami', '2023-10-13', 1);
+// System.debug('Response Code: ' + res.getStatusCode());
+// System.debug('Response Body: ' + res.getBody());
+//StaleJobCleanUp.cleanUpJobs();
