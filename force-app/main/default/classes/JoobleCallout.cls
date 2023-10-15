@@ -39,22 +39,43 @@ public with sharing class JoobleCallout {
     //Fields from JSON: keywords, location, datecreatedfrom (string format yyy-mm-dd), page
 
     private static List<Job_Application__c> createSavedJobApplication(String jsonResponse){
-        //Map<String, Object> parsedResponse = (Map<String,Object>) JSON.deserializeUntyped(jsonResponse);
+        
         
         List<Job_Application__c> jobAppList  = new List<Job_Application__c>();
-        List<Object> jobListings = (List<Object>) JSON.deserializeUntyped(jsonResponse);
+        //List<Object> jobListings = (List<Object>) JSON.deserializeUntyped(jsonResponse);
+        Map<String, Object> parsedResponse = (Map<String,Object>) JSON.deserializeUntyped(jsonResponse);
+        if(parsedResponse.containsKey('jobs')){
+            List<Object> jobListings = (List<Object>) parsedResponse.get('jobs');
 
         for(Object jobListing : jobListings ) {
+            if(jobListing instanceof Map<String,Object>){
         Map<String,Object> jobData = (Map<String,Object>) jobListing;
+        //List<Object> jobAlternateData = (List<Object>) jobListing;
         Job_Application__c jobApp = new Job_Application__c();     
         jobApp.Application_Date__c = Date.today();
         jobApp.Position_Title__c = (String) jobData.get('title');
         jobApp.URL__c = (String) jobData.get('link');
+        jobApp.Location__c = (String) jobData.get('location');
+        String salaryString = (String) jobData.get('salary');
+        Decimal jobSalary;
+        
+        try {
+            jobSalary = Decimal.valueOf(salaryString);
+        } catch (System.TypeException e) {
+            // Handle the case where the salary string is not a valid decimal
+            // You can log an error, set a default value, or take appropriate action.
+            jobSalary = 0.0; // Setting a default value (you can choose a different default)
+        }
+        
+        jobApp.Salary__c = jobSalary;
+        
         jobApp.Status__c = 'Saved';
 
         jobAppList.add(jobApp);
 
         }
+    }
+}
 
         return jobAppList;
    
