@@ -1,45 +1,68 @@
+/**
+ * Purpose: Retrieve interviews scheduled for tomorrow and send email reminders to interviewers.
+ */
 public class InterviewReminder {
 
+    /**
+     * Fetches interviews scheduled for tomorrow.
+     * @return List<Event> - List of interview events scheduled for the next day.
+     */
     public static List<Event> getTomorrowsInterviews() {
+        // Calculate tomorrow's date
         Date tomorrow = Date.today().addDays(1);
-      
+
+        // Query events for interviews scheduled for tomorrow
         List<Event> interviews = [SELECT Id, Subject, StartDateTime, EndDateTime, Location, OwnerId
                                   FROM Event 
                                   WHERE StartDateTime = :tomorrow AND Type = 'Interview'];
+
         return interviews;
     }
     
+    /**
+     * Sends email reminders to the interviewers about the scheduled interviews.
+     * @param interviews - List of interviews for which reminders need to be sent.
+     */
     public static void sendEmailReminders(List<Event> interviews) {
+        // List to hold the email messages to send
         List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
 
+        // Set to store unique OwnerIds (Interviewers) of the interviews
         Set<Id> ownerIds = new Set<Id>();
         for(Event interview : interviews) {
             ownerIds.add(interview.OwnerId);
         }
 
-        // Query the User names and emails based on the OwnerIds
+        // Query to retrieve details of users (Interviewers) based on the OwnerIds
         Map<Id, User> usersMap = new Map<Id, User>([SELECT Id, Name, Email FROM User WHERE Id IN :ownerIds]);
 
+        // Get the base URL of Salesforce instance
         String baseURL = Url.getSalesforceBaseUrl().toExternalForm();
 
+        // Loop through the interviews to prepare email messages
         for(Event interview : interviews) {
             User eventOwner = usersMap.get(interview.OwnerId);
             
+            // Check if the event owner (Interviewer) exists and has an email address
             if(eventOwner != null && eventOwner.Email != null) {
                 Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
                 mail.setToAddresses(new String[] {eventOwner.Email});
                 mail.setSubject('Interview Reminder');
             
                 String interviewee = (eventOwner != null) ? eventOwner.Name : 'N/A';
-            
+
+                // Prepare the body of the email with interview details
                 String body = 'Hello ' + interviewee + ',\n\n' + 
                               'This is a reminder about the interview scheduled at ' + interview.StartDateTime.format() + ' to ' + interview.EndDateTime.format() + '.\n\n' +
                               'For more details, view the interview: (' + baseURL + '/' + interview.Id + ').';
                 mail.setPlainTextBody(body);
+
+                // Add the prepared email to the emails list
                 emails.add(mail);
             }
         }
 
+        // If there are any emails to send, attempt to send them
         if(emails.size() > 0) {
             Messaging.sendEmail(emails);
         }

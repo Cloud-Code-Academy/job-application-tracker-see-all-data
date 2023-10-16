@@ -1,30 +1,42 @@
 public with sharing class JobApplicationStatusTriggerHandler {
     
     public static void handleAfterUpdate(List<Job_Application__c> newList, Map<Id, Job_Application__c> oldMap) {
-        List<Task> tasksToInsert = new List<Task>();
-        Id currentUserId = UserInfo.getUserId();
+      // List to collect tasks that need to be inserted as a result of status change
+      List<Task> tasksToInsert = new List<Task>();
+        
+      // Get the current user's ID
+      Id currentUserId = UserInfo.getUserId();
 
-        for (Job_Application__c app : newList) {
-            Job_Application__c oldApp = oldMap.get(app.Id);
+      // Loop through each Job Application in the updated list
+      for (Job_Application__c app : newList) {
+          // Fetch the corresponding old version of the Job Application
+          Job_Application__c oldApp = oldMap.get(app.Id);
 
-            if (oldApp.Status__c != app.Status__c) { 
-                tasksToInsert.addAll(getTasksForStatus(app.Status__c, app.Id, currentUserId));
+          // Check if the Status field has changed
+          if (oldApp.Status__c != app.Status__c) { 
+              // If status has changed, generate tasks based on the new status
+              tasksToInsert.addAll(getTasksForStatus(app.Status__c, app.Id, currentUserId));
+          }
+      }
 
-            }
-        }
+      // If there are any tasks to insert, attempt to insert them
+      if (!tasksToInsert.isEmpty()) {
+          try {
+              insert tasksToInsert;
+          } catch (DmlException e) {
+              // Log an error message if there's an issue inserting the tasks
+              System.debug('Failed to insert tasks due to: ' + e.getMessage());
+          }
+      }
+  }
 
-        if (!tasksToInsert.isEmpty()) {
-            try {
-                insert tasksToInsert;
-            } catch (DmlException e) {
-                 System.debug('Failed to insert tasks due to: ' + e.getMessage());
-            }
-        }
-    }
+  // Method that returns a list of tasks based on a given job application status
+  private static List<Task> getTasksForStatus(String status, Id applicationId, Id currentUserId) {
+      // List to store the tasks based on the status
+      List<Task> tasks = new List<Task>();
 
-    private static List<Task> getTasksForStatus(String status, Id applicationId, Id currentUserId) {
-        List<Task> tasks = new List<Task>();
-
+      // Check the provided status and create tasks accordingly
+      // For each status, a different task with a unique description is added
         if (status == 'Saved') {
             tasks.add(new Task(
                 Description = '1. Does this job description align with your interests and values?\n' +

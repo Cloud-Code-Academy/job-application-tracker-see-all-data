@@ -1,7 +1,22 @@
 @isTest
 public class InterviewReminderTest {
-    // Query for an existing user 
-    static User brittanyYoung = [SELECT Id FROM User WHERE FirstName = 'Brittany' AND LastName = 'Young' LIMIT 1];
+    // Create a test user "Test User"
+    static User testUser = new User(
+        FirstName = 'Test',
+        LastName = 'User',
+        Alias = 'tuser',
+        Email = 'testuser@example.com',
+        EmailEncodingKey = 'UTF-8',
+        LanguageLocaleKey = 'en_US',
+        LocaleSidKey = 'en_US',
+        TimeZoneSidKey = 'America/Los_Angeles',
+        Username = 'testuser' + DateTime.now().getTime() + '_seealldata@example.com',
+        ProfileId = [SELECT Id FROM Profile WHERE Name='Standard User' LIMIT 1].Id
+    );
+    
+    static {
+        insert testUser;
+    }
 
     @isTest
     static void testSendEmailReminders() {
@@ -16,7 +31,7 @@ public class InterviewReminderTest {
             StartDateTime = DateTime.newInstance(nextWeekday, Time.newInstance(10, 0, 0, 0)),
             EndDateTime = DateTime.newInstance(nextWeekday, Time.newInstance(11, 0, 0, 0)),
             Location = 'Test Location',
-            OwnerId = brittanyYoung.Id,
+            OwnerId = testUser.Id,
             Type = 'Interview'
         );
 
