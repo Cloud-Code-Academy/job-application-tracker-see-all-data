@@ -5,6 +5,7 @@
 // You can also execute the entire file by running the command:
 //     SFDX: Execute Anonymous Apex with Editor Contents
 
-string tempvar = 'Enter_your_name_here';
-System.debug('Hello World!');
-System.debug('My name is ' + tempvar);
+JoobleCallout.getJoobleDetails('Salesforce', 'Las Vegas', '2023-10-15', 1);
+// System.debug('Response Code: ' + res.getStatusCode());
+// System.debug('Response Body: ' + res.getBody());
+//StaleJobCleanUp.cleanUpJobs();
