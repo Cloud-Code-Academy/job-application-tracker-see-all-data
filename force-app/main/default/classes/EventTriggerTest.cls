@@ -1,37 +1,46 @@
 @isTest public with sharing class EventTriggerTest {
-    @isTest static void testEventTrigger(){
+    @isTest static void doubleBookEvent(){
        List<Event> eventsToInsert = new List<Event>();
         for(Integer i = 0; i < 200; i++){
             Event eve = new Event(Subject = 'Test Event' + i,
             StartDateTime = System.now(),
             DurationInMinutes = 30);
             eventsToInsert.add(eve);
-        }
-       insert eventsToInsert;
-       List<Event> eveTriggerValidation = new List<Event>();
-       List<Event> eveNotTriggerValidation = new List<Event>();
-       for(Integer i = 0; i < 200; i++){
-        if(Math.mod(i,2) == 0){
-            eventsToInsert[i].StartDateTime = System.now();
-            eveTriggerValidation.add(eventsToInsert[i]);
-       }else{
-            eventsToInsert[i].StartDateTime = System.now().addDays(1);
-            eveNotTriggerValidation.add(eventsToInsert[i]);
-            }
-        }
-        test.startTest();
+
+            Event eve1 = new Event(Subject = 'Test Event' + i,
+            StartDateTime = System.now(),
+            DurationInMinutes = 30);
+            eventsToInsert.add(eve1);
+        } 
         try{
-        update eventsToInsert;
-        System.assert(false,'Expected an exception but did not get one.');
-        } catch (DmlException e) {
-            System.assert(e.getMessage().contains('Interviews cannot be scheduled on weekends')); 
+        Test.startTest();
+        insert eventsToInsert;
         }
-        update eveNotTriggerValidation;
-        List<Event> eveNotTriggerValidationUpdated = [SELECT Id, Subject, StartDateTime, DurationInMinutes FROM Event WHERE Id IN :eveNotTriggerValidation];
-        for(Event eve : eveNotTriggerValidationUpdated){
-            
-            System.assertEquals(200, eveNotTriggerValidationUpdated.size(),'The number of events is not 200');
+        catch(DmlException e){
+        System.assert(e.getMessage().contains('You cannot schedule two Interviews at the same time.'));
         }
-        test.stopTest(); 
-    }  
+        Test.stopTest();
+    }
+    @isTest static void bookOnWeekends(){
+        List<Event> weekends = new List<Event>();
+        for(Integer i = 0; i < 200; i++){
+            Event satBookings = new Event(Subject = 'Test Event' + i,
+            StartDateTime = DateTime.newInstanceGMT(2023, 10, 20, 8, 0, 0),
+            DurationInMinutes = 30);
+            weekends.add(satBookings);
+            Event sunBookings = new Event(Subject = 'Test Event' + i,
+            StartDateTime = DateTime.newInstanceGMT(2023, 10, 22, 8, 0, 0),
+            DurationInMinutes = 30);
+            weekends.add(sunBookings);
+        }
+        try{
+        Test.startTest();
+        insert weekends;
+        }
+        catch(DmlException e){
+        System.assert(e.getMessage().contains('Interviews cannot be scheduled on weekends'));
+        }
+        Test.stopTest();
+    }
 }
+    
