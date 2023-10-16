@@ -34,7 +34,7 @@ public class InterviewReminder {
             
                 String body = 'Hello ' + interviewee + ',\n\n' + 
                               'This is a reminder about the interview scheduled at ' + interview.StartDateTime.format() + ' to ' + interview.EndDateTime.format() + '.\n\n' +
-                              'For more details, view the interview [here](' + baseURL + '/' + interview.Id + ').';
+                              'For more details, view the interview: (' + baseURL + '/' + interview.Id + ').';
                 mail.setPlainTextBody(body);
                 emails.add(mail);
             }
