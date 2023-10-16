@@ -2,11 +2,23 @@
 private class JobApplicationStatusTriggerHandlerTest {
 
     @isTest static void testHandleAfterUpdate() {
-        // Query for an existing user "Brittany Young"
-        User brittanyYoung = [SELECT Id FROM User WHERE FirstName = 'Brittany' AND LastName = 'Young' LIMIT 1];
+        // Create a test user "Test User"
+        User testUser = new User(
+            FirstName = 'Test',
+            LastName = 'User',
+            Alias = 'tuser',
+            Email = 'testuser@example.com',
+            EmailEncodingKey = 'UTF-8',
+            LanguageLocaleKey = 'en_US',
+            LocaleSidKey = 'en_US',
+            TimeZoneSidKey = 'America/Los_Angeles',
+            Username = 'testuser' + DateTime.now().getTime() + '_seealldata@example.com',
+            ProfileId = [SELECT Id FROM Profile WHERE Name='Standard User' LIMIT 1].Id
+        );
+        insert testUser;
 
-        // Ensure that Brittany Young exists
-        System.assertNotEquals(null, brittanyYoung, 'Brittany Young user does not exist');
+        // Ensure that the test user was created
+        System.assertNotEquals(null, testUser, 'Test user was not created');
 
         // Create a test job application with status 'Saved'
         Job_Application__c savedApp = new Job_Application__c(
@@ -45,16 +57,16 @@ private class JobApplicationStatusTriggerHandlerTest {
             applyingApp.Id => new Job_Application__c(Status__c = 'Saved')
         };
 
-        // Set the current user to Brittany Young
-        System.runAs(brittanyYoung) {
+        // Set the current user to Test User
+        System.runAs(testUser) {
             // Call the trigger handler for 'Saved' to 'Applying'
             JobApplicationStatusTriggerHandler.handleAfterUpdate(newApps1, oldMap1);
 
-            // Verify that a task was created with Brittany Young as the OwnerId
+            // Verify that a task was created with Test User as the OwnerId
             List<Task> tasks1 = [SELECT Id, OwnerId FROM Task];
             System.assertEquals(2, tasks1.size(), 'Expected two tasks to be created');
             for (Task task : tasks1) {
-                System.assertEquals(brittanyYoung.Id, task.OwnerId, 'Task should have Brittany Young as the Owner');
+                System.assertEquals(testUser.Id, task.OwnerId, 'Task should have Test User as the Owner');
             }
         }
 
@@ -65,16 +77,16 @@ private class JobApplicationStatusTriggerHandlerTest {
             appliedApp.Id => new Job_Application__c(Status__c = 'Applying')
         };
 
-        // Set the current user to Brittany Young
-        System.runAs(brittanyYoung) {
+        // Set the current user to Test User
+        System.runAs(testUser) {
             // Call the trigger handler for 'Applying' to 'Applied'
             JobApplicationStatusTriggerHandler.handleAfterUpdate(newApps2, oldMap2);
 
-            // Verify that additional tasks were created with Brittany Young as the OwnerId
+            // Verify that additional tasks were created with Test User as the OwnerId
             List<Task> tasks2 = [SELECT Id, OwnerId FROM Task];
             System.assertEquals(4, tasks2.size(), 'Expected four tasks to be created');
             for (Task task : tasks2) {
-                System.assertEquals(brittanyYoung.Id, task.OwnerId, 'Task should have Brittany Young as the Owner');
+                System.assertEquals(testUser.Id, task.OwnerId, 'Task should have Test User as the Owner');
             }
         }
 
@@ -85,16 +97,16 @@ private class JobApplicationStatusTriggerHandlerTest {
             closedApp.Id => new Job_Application__c(Status__c = 'Applied')
         };
 
-        // Set the current user to Brittany Young
-        System.runAs(brittanyYoung) {
+        // Set the current user to Test User
+        System.runAs(testUser) {
             // Call the trigger handler for 'Applied' to 'Closed'
             JobApplicationStatusTriggerHandler.handleAfterUpdate(newApps3, oldMap3);
 
-            // Verify that a task was created with Brittany Young as the OwnerId
+            // Verify that a task was created with Test User as the OwnerId
             List<Task> tasks3 = [SELECT Id, OwnerId FROM Task];
             System.assertEquals(6, tasks3.size(), 'Expected six tasks to be created');
             for (Task task : tasks3) {
-                System.assertEquals(brittanyYoung.Id, task.OwnerId, 'Task should have Brittany Young as the Owner');
+                System.assertEquals(testUser.Id, task.OwnerId, 'Task should have Test User as the Owner');
             }
         }
         
@@ -105,16 +117,16 @@ private class JobApplicationStatusTriggerHandlerTest {
             negotiatingApp.Id => new Job_Application__c(Status__c = 'Applying')
         };
 
-        // Set the current user to Brittany Young
-        System.runAs(brittanyYoung) {
+        // Set the current user to Test User
+        System.runAs(testUser) {
             // Call the trigger handler for 'Applying' to 'Negotiating'
             JobApplicationStatusTriggerHandler.handleAfterUpdate(newApps4, oldMap4);
 
-            // Verify that additional tasks were created with Brittany Young as the OwnerId
+            // Verify that additional tasks were created with Test User as the OwnerId
             List<Task> tasks4 = [SELECT Id, OwnerId FROM Task];
             System.assertEquals(8, tasks4.size(), 'Expected eight tasks to be created');
             for (Task task : tasks4) {
-                System.assertEquals(brittanyYoung.Id, task.OwnerId, 'Task should have Brittany Young as the Owner');
+                System.assertEquals(testUser.Id, task.OwnerId, 'Task should have Test User as the Owner');
             }
         }
     }
