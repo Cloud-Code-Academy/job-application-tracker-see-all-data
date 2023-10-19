@@ -1,3 +1,8 @@
 import { LightningElement } from 'lwc';
 
-export default class TakeHomePayCalculator extends LightningElement {}
+export default class TakeHomePayCalculator extends LightningElement {
+
+    takeHomePay = 0;
+     
+
+}
