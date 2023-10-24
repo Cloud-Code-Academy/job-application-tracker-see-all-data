@@ -29,12 +29,34 @@ socialSecurityRate = 0.0620;
 
     handleCalculate() {
         // Calculate the Take Home Pay
-       this.takeHomePay = this.salary - this.calculateFederalTax() - this.salary * this.medicareRate - this.salary * this.socialSecurityRate;
-        //this.takeHomePay = takeHomePay;
+        this.federalWithholding = this.calculateFederalTax();
+        this.medicareWithholding = this.salary * this.medicareRate;
+        this.socialSecurityWithholding = this.salary * this.socialSecurityRate;
+        this.takeHomePay = this.salary - this.federalWithholding - this.medicareWithholding - this.socialSecurityWithholding;
+
         this.yearlyTakeHomePay = this.takeHomePay * 12;
         this.semiAnnualTakeHomePay = this.takeHomePay / 2;
-        this.monthlyTakeHomePay = this.takeHomePay;
+        this.monthlyTakeHomePay = this.takeHomePay / 12;
         this.biWeeklyTakeHomePay = this.takeHomePay / 26;
+
+        this.federalWithholding = this.federalWithholding.toFixed(2);
+        this.medicareWithholding = this.medicareWithholding.toFixed(2);
+        this.socialSecurityWithholding = this.socialSecurityWithholding.toFixed(2);
+
+        this.updateInputFields();
+    }
+    updateInputFields() {
+        // Update the input fields with the calculated values
+        const inputFields = this.template.querySelectorAll('lightning-input');
+        inputFields.forEach((field) => {
+            if (field.name === 'federalTax') {
+                field.value = this.federalWithholding;
+            } else if (field.name === 'medicare') {
+                field.value = this.medicareWithholding;
+            } else if (field.name === 'socialsecurity') {
+                field.value = this.socialSecurityWithholding;
+            }
+        });
     }
 
     calculateFederalTax() {
@@ -67,6 +89,7 @@ socialSecurityRate = 0.0620;
         this[fieldName.toLowerCase()] = parseFloat(event.target.value);
     }
 }
+
 
 
     
