@@ -1,5 +1,5 @@
 <template>
-    <div class="slds-text-heading_large">See All Data Presents: The Greatest Fucking LWC of All-Time</div>
+    <div class="slds-text-heading_large">SEE ALL DATA</div>
     <lightning-button variant="brand" class="slds-m-left_x-small"></lightning-button>
     <lightning-card title="Take Home Pay Calculator" icon-name="custom:custom14">
         <div class="slds-grid slds-gutters">
@@ -9,28 +9,28 @@
             type="number"
             name="salary"
             label="Salary"
-            value={devFundamentalScore}
+            value={salary}
             onchange={handleChange}
         ></lightning-input>
         <lightning-input
             type="number"
             name="federalTax"
             label="Federal Tax"
-            value={processAutomationScore}
+            value={federalWithholding}
             onchange={handleChange}
         ></lightning-input>
         <lightning-input
             type="number"
             name="medicare"
             label="Medicare"
-            value={userInterfaceScore}
+            value={medicare}
             onchange={handleChange}
         ></lightning-input>
         <lightning-input
             type="number"
             name="socialsecurity"
             label="Social Security"
-            value={testingScore}
+            value={socialSecurity}
             onchange={handleChange}
         ></lightning-input>
     </div>
@@ -48,7 +48,7 @@
             type="number"
             name="yearlytakehomepay"
             label="Annual Take Home Pay"
-            value={annualTakeHomePay}
+            value={yearlyTakeHomePay}
             onchange={handleChange}
         ></lightning-input>
         <lightning-input
@@ -76,9 +76,14 @@
 </div>
 </div>
 <!-- Display results-->
-<lightning-card title="Take Home Pay Calculator">
-    <lightning-button variant="brand"  label="Calculate" title="Calculate" slot="actions" onclick="{}"></lightning-button>
-    <p slot="footer">Copyright: See All Data <span style="color:red"></span></p>
-</lightning-card>
+<lightning-card title="See Your Sad Paycheck Here >>>">
+    <lightning-button variant="brand"  label="Calculate" title="Calculate" slot="actions" onclick={handleCalculate}></lightning-button>
+    <p slot="footer">Disclaimer: This calculator was built for a capstone project and experimental purposes only.  It is in no way a factual representation of actual compensation. Please consult your tax advisor. <span style="color:red"></span></p>
+        </lightning-card>
+        <div class="slds-p-around_medium">
+            <div>Federal Tax: ${federalWithholding}</div>
+            <div>Social Security: ${socialSecurityWithholding}</div>
+            <div>Medicare: ${medicareWithholding}</div>
+        </div>
     </lightning-card>
 </template>
