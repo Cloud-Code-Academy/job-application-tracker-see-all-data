@@ -7,7 +7,7 @@ public with sharing class JoobleCalloutMockGenerator implements HttpCalloutMock 
         //Check if the request is a POST request
         if(req.getMethod() == 'POST') {
             //Return a success response for the POST request
-            res.setBody('{"status": "success"}');
+            res.setBody('{"jobs": [{"status": "Saved", "salary": "80000.00", "link": "www.google.com"}]}');
         }
         res.setStatusCode(200);
         return res;

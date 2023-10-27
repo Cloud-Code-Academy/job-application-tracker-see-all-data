@@ -1,5 +1,5 @@
 /**
- * Purpose: Retrieve interviews scheduled for tomorrow and send email reminders to interviewers.
+ * Purpose: Retrieve interviews scheduled for tomorrow and send email reminders to interviewees.
  */
 public class InterviewReminder {
 
@@ -41,7 +41,7 @@ public class InterviewReminder {
         for(Event interview : interviews) {
             User eventOwner = usersMap.get(interview.OwnerId);
             
-            // Check if the event owner (Interviewer) exists and has an email address
+            // Check if the event owner (Interviewee) exists and has an email address
             if(eventOwner != null && eventOwner.Email != null) {
                 Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
                 mail.setToAddresses(new String[] {eventOwner.Email});
