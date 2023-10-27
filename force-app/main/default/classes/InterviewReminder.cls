@@ -3,37 +3,35 @@
  */
 public class InterviewReminder {
 
-    /**
-     * Fetches interviews scheduled for tomorrow.
-     * @return List<Event> - List of interview events scheduled for the next day.
-     */
     public static List<Event> getTomorrowsInterviews() {
-        // Calculate tomorrow's date
-        Date tomorrow = Date.today().addDays(1);
-
+        // Calculate start and end of tomorrow's date
+        DateTime startOfTomorrow = DateTime.newInstance(Date.today().addDays(1), Time.newInstance(0, 0, 0, 0));
+        DateTime endOfTomorrow = DateTime.newInstance(Date.today().addDays(1), Time.newInstance(23, 59, 59, 0));
+        
         // Query events for interviews scheduled for tomorrow
         List<Event> interviews = [SELECT Id, Subject, StartDateTime, EndDateTime, Location, OwnerId
                                   FROM Event 
-                                  WHERE StartDateTime = :tomorrow AND Type = 'Interview'];
+                                  WHERE StartDateTime >= :startOfTomorrow 
+                                  AND StartDateTime <= :endOfTomorrow 
+                                  AND Type = 'Interview'];
 
         return interviews;
     }
-    
+
     /**
-     * Sends email reminders to the interviewers about the scheduled interviews.
-     * @param interviews - List of interviews for which reminders need to be sent.
+     * Sends email reminders to the interviewees about the scheduled interviews.
      */
     public static void sendEmailReminders(List<Event> interviews) {
         // List to hold the email messages to send
         List<Messaging.SingleEmailMessage> emails = new List<Messaging.SingleEmailMessage>();
 
-        // Set to store unique OwnerIds (Interviewers) of the interviews
+        // Set to store unique OwnerIds of the interviews
         Set<Id> ownerIds = new Set<Id>();
         for(Event interview : interviews) {
             ownerIds.add(interview.OwnerId);
         }
 
-        // Query to retrieve details of users (Interviewers) based on the OwnerIds
+        // Query to retrieve details of users based on the OwnerIds
         Map<Id, User> usersMap = new Map<Id, User>([SELECT Id, Name, Email FROM User WHERE Id IN :ownerIds]);
 
         // Get the base URL of Salesforce instance

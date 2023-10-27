@@ -29,7 +29,7 @@ public class AutomatePrimaryContact {
         }
 
         if(!jobAppList.isEmpty()) {
-            update jobAppList;
+            //update jobAppList;
         }
     }
 }

@@ -6,7 +6,7 @@ public with sharing class EventTriggerHandler extends TriggerHandler{
     }
     public override void beforeInsert() {
         List<Event> events = new List<Event>();
-        
+        Set<DateTime> eventDates = new Set<DateTime>();
         for(Event event : this.newEvents){
             if(event.StartDateTime.format('EEEE') == 'Saturday' || event.StartDateTime.format('EEEE') == 'Sunday'){
                event.addError('Interviews cannot be scheduled on weekends');
