@@ -9,4 +9,8 @@ trigger JobApplicationTrigger on Job_Application__c (before insert, before updat
     if(Trigger.isAfter && Trigger.isUpdate) {
         JobApplicationStatusTriggerHandler.handleAfterUpdate(Trigger.new, Trigger.oldMap);
     }
+    
+    if (Trigger.isBefore && Trigger.isUpdate) {
+    AutomatePrimaryContact.assignPrimaryContact(Trigger.new);
+    }
 }
