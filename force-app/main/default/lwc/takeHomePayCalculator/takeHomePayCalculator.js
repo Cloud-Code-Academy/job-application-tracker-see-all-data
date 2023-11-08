@@ -34,7 +34,7 @@ socialSecurityRate = 0.0620;
         this.socialSecurityWithholding = this.salary * this.socialSecurityRate;
         this.takeHomePay = this.salary - this.federalWithholding - this.medicareWithholding - this.socialSecurityWithholding;
 
-        this.yearlyTakeHomePay = this.takeHomePay * 12;
+        this.yearlyTakeHomePay = this.takeHomePay;
         this.semiAnnualTakeHomePay = this.takeHomePay / 2;
         this.monthlyTakeHomePay = this.takeHomePay / 12;
         this.biWeeklyTakeHomePay = this.takeHomePay / 26;

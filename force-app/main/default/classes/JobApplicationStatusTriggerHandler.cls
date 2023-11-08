@@ -1,7 +1,8 @@
+//Trigger Handler for creating taks on the job application based on the various status values 
 public with sharing class JobApplicationStatusTriggerHandler {
     
     public static void handleAfterUpdate(List<Job_Application__c> newList, Map<Id, Job_Application__c> oldMap) {
-      // List to collect tasks that need to be inserted as a result of status change
+      // List to collect tasks that need to be inserted as a result of the job application status being updated
       List<Task> tasksToInsert = new List<Task>();
         
       // Get the current user's ID
@@ -35,8 +36,8 @@ public with sharing class JobApplicationStatusTriggerHandler {
       // List to store the tasks based on the status
       List<Task> tasks = new List<Task>();
 
-      // Check the provided status and create tasks accordingly
-      // For each status, a different task with a unique description is added
+      // Check the provided status 
+      // For each status, create a task that includes industry tips in the comments to follow for a better chance at landing a job
         if (status == 'Saved') {
             tasks.add(new Task(
                 Description = '1. Does this job description align with your interests and values?\n' +

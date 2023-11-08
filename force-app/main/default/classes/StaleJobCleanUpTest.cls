@@ -13,13 +13,13 @@ public with sharing class StaleJobCleanUpTest {
        }
         insert cleanUpTest;
         Test.startTest();
-        StaleJobCleanUp.cleanUpJobs();
+        StaleJobCleanUp.enqueueJob();
         Test.stopTest();
         // Verify that the job applications were updated
         List<Job_Application__c> updatedJobApps = [SELECT Id, Status__c, Notes__c FROM Job_Application__c WHERE Id IN :cleanUpTest];
         for(Job_Application__c jobApp : updatedJobApps) {
             System.assertEquals('Closed', jobApp.Status__c,'Job applications were not updated');
-            System.assertEquals('Closed by automated process.', jobApp.Notes__c,'Job application notes were not updated');
+            System.assertEquals('Application has been closed due to inactivity longer than 30 days.', jobApp.Notes__c,'Job application notes were not updated');
         }
     }
 }
