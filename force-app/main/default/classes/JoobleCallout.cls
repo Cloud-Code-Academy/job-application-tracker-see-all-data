@@ -53,6 +53,7 @@ public with sharing class JoobleCallout {
         //List<Object> jobAlternateData = (List<Object>) jobListing;
         Job_Application__c jobApp = new Job_Application__c();     
         jobApp.Application_Date__c = Date.today();
+        jobApp.Name = (String) jobData.get('title') + ' Application';
         jobApp.Position_Title__c = (String) jobData.get('title');
         jobApp.URL__c = (String) jobData.get('link');
         jobApp.Location__c = (String) jobData.get('location');
