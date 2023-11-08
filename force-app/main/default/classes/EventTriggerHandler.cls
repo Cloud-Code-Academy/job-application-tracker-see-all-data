@@ -6,10 +6,10 @@ public with sharing class EventTriggerHandler extends TriggerHandler{
     }
     public override void beforeInsert() {
         List<Event> events = new List<Event>();
-        
+        Set<DateTime> eventDates = new Set<DateTime>();
         for(Event event : this.newEvents){
             if(event.StartDateTime.format('EEEE') == 'Saturday' || event.StartDateTime.format('EEEE') == 'Sunday'){
-               event.addError('Interviews cannot be scheduled on weekends');
+               event.addError(event.Type +'s '+ 'cannot be scheduled on weekends.');
             } else {
                 events.add(event);
             }
@@ -21,7 +21,7 @@ public with sharing class EventTriggerHandler extends TriggerHandler{
         for(Event event : events){
             for(Event existingEvent : existingEvents){
                 if(event.StartDateTime == existingEvent.StartDateTime){
-                   event.addError('You cannot schedule two Interviews at the same time.');
+                   event.addError('This event slot is already booked.');
                 }
             }
         }

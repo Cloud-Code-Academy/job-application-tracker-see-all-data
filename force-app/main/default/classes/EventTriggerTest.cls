@@ -17,7 +17,7 @@
         insert eventsToInsert;
         }
         catch(DmlException e){
-        System.assert(e.getMessage().contains('You cannot schedule two Interviews at the same time.'));
+        System.assert(e.getMessage().contains(event.Type + 's' +' '+ 'cannot be scheduled on weekends.'));
         }
         Test.stopTest();
     }
@@ -38,7 +38,7 @@
         insert weekends;
         }
         catch(DmlException e){
-        System.assert(e.getMessage().contains('Interviews cannot be scheduled on weekends'));
+        System.assert(e.getMessage().contains('This event slot is already booked.'));
         }
         Test.stopTest();
     }
