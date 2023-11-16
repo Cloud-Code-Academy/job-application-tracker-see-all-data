@@ -9,7 +9,7 @@ public with sharing class EventTriggerHandler extends TriggerHandler{
         Set<DateTime> eventDates = new Set<DateTime>();
         for(Event event : this.newEvents){
             if(event.StartDateTime.format('EEEE') == 'Saturday' || event.StartDateTime.format('EEEE') == 'Sunday'){
-               event.addError(event.Type +'s '+ 'cannot be scheduled on weekends.');
+               event.addError('This' + ' ' +event.Subject + ' ' + event.Type +' '+ 'cannot be scheduled on weekends.');
             } else {
                 events.add(event);
             }
@@ -25,8 +25,5 @@ public with sharing class EventTriggerHandler extends TriggerHandler{
                 }
             }
         }
-
-
     }
-
 }

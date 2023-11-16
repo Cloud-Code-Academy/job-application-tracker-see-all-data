@@ -13,7 +13,8 @@ public with sharing class StaleJobCleanUpTest {
        }
         insert cleanUpTest;
         Test.startTest();
-        StaleJobCleanUp.enqueueJob();
+        String cronExp = '0 0 0 ? * * *';
+        System.schedule('Test Stale Job Clean Up', cronExp, new StaleJobCleanUp());
         Test.stopTest();
         // Verify that the job applications were updated
         List<Job_Application__c> updatedJobApps = [SELECT Id, Status__c, Notes__c FROM Job_Application__c WHERE Id IN :cleanUpTest];
