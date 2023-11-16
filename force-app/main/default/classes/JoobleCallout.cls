@@ -4,7 +4,6 @@ public with sharing class JoobleCallout {
         List<Job_Application__c> parsedJobApp = new List<Job_Application__c>();
         HttpRequest req = new HttpRequest();
         req.setEndpoint('callout:Jooble_Named_Credential');
-        //req.setEndpoint('https://jooble.org/api/4973a10c-0cb9-4f66-aa9e-6d1f02d1d2de');
         req.setMethod('POST');
 
 // Construct the JSON payload to send with the POST request
@@ -16,18 +15,12 @@ public with sharing class JoobleCallout {
         
             req.setHeader('Content-Type', 'application/json');
             req.setBody(JSON.serialize(requestBody));
-        // req.setEndpoint(req.getEndpoint() +
-        // '?keywords=' + keywords +
-        // '&location=' + location +
-        // '&datecreatedfrom=' + datecreatedfrom +
-        // '&page=' + String.valueOf(page));
-
+        
         Http http = new Http();
         HttpResponse res = http.send(req);
         System.debug(res.getBody());
 
         if (res.getStatusCode() == 200) {
-            //replace this part with method?
             parsedJobApp = createSavedJobApplication(res.getBody());
             insert parsedJobApp; 
         
@@ -35,7 +28,6 @@ public with sharing class JoobleCallout {
         System.debug('Error: ' + res.getStatusCode() + ' ' + res.getStatus());
     }
 }
-
     //Fields from JSON: keywords, location, datecreatedfrom (string format yyy-mm-dd), page
 
     private static List<Job_Application__c> createSavedJobApplication(String jsonResponse){
@@ -64,21 +56,15 @@ public with sharing class JoobleCallout {
             jobSalary = Decimal.valueOf(salaryString);
         } catch (System.TypeException e) {
             // Handle the case where the salary string is not a valid decimal
-            // You can log an error, set a default value, or take appropriate action.
-            jobSalary = 0.0; // Setting a default value (you can choose a different default)
+            jobSalary = 0.0; // Setting a default value
         }
         
-        jobApp.Salary__c = jobSalary;
-        
+        jobApp.Salary__c = jobSalary;        
         jobApp.Status__c = 'Saved';
-
         jobAppList.add(jobApp);
-
         }
     }
 }
-
-        return jobAppList;
-   
+        return jobAppList;   
     }
 }
