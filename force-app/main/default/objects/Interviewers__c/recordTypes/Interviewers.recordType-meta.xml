@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Interviewers</fullName>
+    <active>true</active>
+    <label>Interviewers</label>
+    <picklistValues>
+        <picklist>Role__c</picklist>
+        <values>
+            <fullName>CEO</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Consultant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Developer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hiring Manager</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Office Manager</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Recruiter</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Senior Consultant</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Senior Developer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Solution Architect</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Technical Architect</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>
