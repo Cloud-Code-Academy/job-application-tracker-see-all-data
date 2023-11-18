@@ -27,9 +27,5 @@ public class AutomatePrimaryContact {
                 }
             }
         }
-
-        if(!jobAppList.isEmpty()) {
-            //update jobAppList;
-        }
     }
 }
