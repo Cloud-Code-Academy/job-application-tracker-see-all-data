@@ -9,7 +9,7 @@ public with sharing class EventTriggerHandler extends TriggerHandler{
         Set<DateTime> eventDates = new Set<DateTime>();
         for(Event event : this.newEvents){
             if(event.StartDateTime.format('EEEE') == 'Saturday' || event.StartDateTime.format('EEEE') == 'Sunday'){
-               event.addError('This' + ' ' +event.Subject + ' ' + event.Type +' '+ 'cannot be scheduled on weekends.');
+               event.addError('Weekend bookings unavaible, please select a weekday.');
             } else {
                 events.add(event);
             }
@@ -21,7 +21,7 @@ public with sharing class EventTriggerHandler extends TriggerHandler{
         for(Event event : events){
             for(Event existingEvent : existingEvents){
                 if(event.StartDateTime == existingEvent.StartDateTime){
-                   event.addError('This event slot is already booked.');
+                   event.addError('This time slot is currently booked, please select another time.');
                 }
             }
         }
