@@ -17,7 +17,7 @@
         insert eventsToInsert;
         }
         catch(DmlException e){
-        System.assert(e.getMessage().contains(event.Type + 's' +' '+ 'cannot be scheduled on weekends.'));
+        System.assert(e.getMessage().contains('This time slot is currently booked, please select another time.'));
         }
         Test.stopTest();
     }
@@ -26,11 +26,14 @@
         for(Integer i = 0; i < 200; i++){
             Event satBookings = new Event(Subject = 'Test Event' + i,
             StartDateTime = DateTime.newInstanceGMT(2023, 10, 20, 8, 0, 0),
-            DurationInMinutes = 30);
+            DurationInMinutes = 30,
+            Type = 'Interview' + i);
             weekends.add(satBookings);
             Event sunBookings = new Event(Subject = 'Test Event' + i,
             StartDateTime = DateTime.newInstanceGMT(2023, 10, 22, 8, 0, 0),
-            DurationInMinutes = 30);
+            DurationInMinutes = 30,
+            Type = 'Meeting' + i
+            );
             weekends.add(sunBookings);
         }
         try{
@@ -38,7 +41,7 @@
         insert weekends;
         }
         catch(DmlException e){
-        System.assert(e.getMessage().contains('This event slot is already booked.'));
+        System.assert(e.getMessage().contains('Weekend bookings unavaible, please select a weekday.'));
         }
         Test.stopTest();
     }
